@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUSI EDP ITEM TRACKER</title>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #1e1e1e;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border-top: 6px solid #ffcc00;
+        }
+
+        .header {
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #ffffff;
+        }
+
+        .header p {
+            font-size: 11px;
+            color: #aaaaaa;
+            margin-top: 5px;
+            text-transform: uppercase;
+        }
+
+        form {
+            padding: 25px 20px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ffcc00;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #ffcc00;
+            background-color: #333333;
+        }
+
+        input::placeholder {
+            color: #666666;
+            font-size: 12px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: #ffcc00;
+            border: none;
+            border-radius: 6px;
+            color: #000000;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #e6b800;
+        }
+
+        .btn-submit:disabled {
+            background-color: #555555;
+            color: #888888;
+            cursor: not-allowed;
+        }
+
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: #1b5e20;
+            color: #c8e6c9;
+        }
+
+        .error {
+            background-color: #b71c1c;
+            color: #ffcdd2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>RUSI EDP ITEM TRACKER</h1>
+            <p>Scan & Submit Asset Log Details</p>
+        </div>
+
+        <form id="logForm">
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" placeholder="e.g., San Manuel Isabela" required>
+            </div>
+
+            <div class="form-group">
+                <label for="item">Item Description</label>
+                <input type="text" id="item" placeholder="e.g., COMPUTER SET, SERVER SET" required>
+            </div>
+
+            <div class="form-group">
+                <label for="branch">Branch - Outlet</label>
+                <input type="text" id="branch" placeholder="e.g., Meycauayan-Marilao" required>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status">
+                    <option value="In Transit">In Transit</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="receivedBy">Received By (Name)</label>
+                <input type="text" id="receivedBy" placeholder="e.g., Juan Dela Cruz" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contactNumber">Contact Number</label>
+                <input type="text" id="contactNumber" placeholder="e.g., 09123456789" required>
+            </div>
+
+            <div class="form-group">
+                <label for="remarks">Remarks</label>
+                <input type="text" id="remarks" placeholder="e.g., Boxed with bubble wrap">
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">Submit Log</button>
+            <div id="message"></div>
+        </form>
+    </div>
+
+    <script>
+        // PALITAN MO ITO NG IYONG GOOGLE APPS SCRIPT URL NA MAY /exec SA DULO
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwQwhLgAWmP4Y9CRONiEHOmoEhnIuZ5Tu5nM9eMokos15phnpEPfxUYawTGh1WaYewwGA/exec";
+
+        document.getElementById('logForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const messageDiv = document.getElementById('message');
+            
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Submitting...";
+            messageDiv.style.display = "none";
+
+            const payload = {
+                location: document.getElementById('location').value,
+                item: document.getElementById('item').value,
+                branch: document.getElementById('branch').value,
+                status: document.getElementById('status').value,
+                receivedBy: document.getElementById('receivedBy').value,
+                contactNumber: document.getElementById('contactNumber').value,
+                remarks: document.getElementById('remarks').value
+            };
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                messageDiv.className = "success";
+                messageDiv.innerText = "Log submitted successfully to Tracker v2!";
+                messageDiv.style.display = "block";
+                document.getElementById('logForm').reset();
+            })
+            .catch(error => {
+                messageDiv.className = "error";
+                messageDiv.innerText = "Error: " + error.message;
+                messageDiv.style.display = "block";
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Submit Log";
+            });
+        });
+    </script>
+</body>
+</html>
