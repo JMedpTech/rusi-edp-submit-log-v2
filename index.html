@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUSI EDP ITEM TRACKER</title>
-    <!-- Google Fonts -->
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         * {
@@ -129,15 +128,8 @@
             display: none;
         }
 
-        .success {
-            background-color: #1b5e20;
-            color: #c8e6c9;
-        }
-
-        .error {
-            background-color: #b71c1c;
-            color: #ffcdd2;
-        }
+        .success { background-color: #1b5e20; color: #c8e6c9; }
+        .error { background-color: #b71c1c; color: #ffcdd2; }
     </style>
 </head>
 <body>
@@ -175,8 +167,7 @@
     </div>
 
     <script>
-        // PALITAN MO ITO NG IYONG GOOGLE APPS SCRIPT URL NA MAY /exec SA DULO
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzTtghODKduvInk8kXI7myTX0MnFf7RaSPbD3yA6_kDr2-2ISCUR-TI_caMEjMeqI7EQg/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzS8CnPF58v_UbX9uJLYJ7BootZX3a6wf6cFll1fH_qbnaq0skzJ6hpg9xPrxmyfrFI8g/exec";
 
         document.getElementById('logForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -188,15 +179,12 @@
             submitBtn.innerText = "Submitting...";
             messageDiv.style.display = "none";
 
-            // Apat na fields lang ang ipapadala natin sa database
+            // Tiyaking apat na fields lang ang ipapasa natin na may tamang susunod na pangalan
             const payload = {
                 location: document.getElementById('location').value,
                 item: document.getElementById('item').value,
-                branch: "", // Blanko o pwedeng manggaling sa location mamaya kung gusto mo
-                status: "In Transit", // Awtomatikong nagse-set bilang default status
                 receivedBy: document.getElementById('receivedBy').value,
-                contactNumber: document.getElementById('contactNumber').value,
-                remarks: "" // Blanko muna
+                contactNumber: document.getElementById('contactNumber').value
             };
 
             fetch(WEB_APP_URL, {
