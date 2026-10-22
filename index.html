@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUSI EDP ITEM TRACKER</title>
+    <!-- Google Fonts -->
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         * {
@@ -71,7 +72,7 @@
             margin-bottom: 6px;
         }
 
-        input[type="text"], select {
+        input[type="text"] {
             width: 100%;
             padding: 12px;
             background-color: #2a2a2a;
@@ -82,7 +83,7 @@
             transition: all 0.3s ease;
         }
 
-        input[type="text"]:focus, select:focus {
+        input[type="text"]:focus {
             outline: none;
             border-color: #ffcc00;
             background-color: #333333;
@@ -159,21 +160,6 @@
             </div>
 
             <div class="form-group">
-                <label for="branch">Branch - Outlet</label>
-                <input type="text" id="branch" placeholder="e.g., Meycauayan-Marilao" required>
-            </div>
-
-            <div class="form-group">
-                <label for="status">Status</label>
-                <select id="status">
-                    <option value="In Transit">In Transit</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label for="receivedBy">Received By (Name)</label>
                 <input type="text" id="receivedBy" placeholder="e.g., Juan Dela Cruz" required>
             </div>
@@ -181,11 +167,6 @@
             <div class="form-group">
                 <label for="contactNumber">Contact Number</label>
                 <input type="text" id="contactNumber" placeholder="e.g., 09123456789" required>
-            </div>
-
-            <div class="form-group">
-                <label for="remarks">Remarks</label>
-                <input type="text" id="remarks" placeholder="e.g., Boxed with bubble wrap">
             </div>
 
             <button type="submit" class="btn-submit" id="submitBtn">Submit Log</button>
@@ -207,14 +188,15 @@
             submitBtn.innerText = "Submitting...";
             messageDiv.style.display = "none";
 
+            // Apat na fields lang ang ipapadala natin sa database
             const payload = {
                 location: document.getElementById('location').value,
                 item: document.getElementById('item').value,
-                branch: document.getElementById('branch').value,
-                status: document.getElementById('status').value,
+                branch: "", // Blanko o pwedeng manggaling sa location mamaya kung gusto mo
+                status: "In Transit", // Awtomatikong nagse-set bilang default status
                 receivedBy: document.getElementById('receivedBy').value,
                 contactNumber: document.getElementById('contactNumber').value,
-                remarks: document.getElementById('remarks').value
+                remarks: "" // Blanko muna
             };
 
             fetch(WEB_APP_URL, {
