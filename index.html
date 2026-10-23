@@ -28,7 +28,7 @@
             width: 100%;
             max-width: 450px;
             border-radius: 12px;
-            box-shadow: 0 8px 24 rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
             overflow: hidden;
             border-top: 6px solid #ffcc00;
         }
@@ -162,7 +162,8 @@
             <div class="form-group">
                 <label for="idNumber">ID Number</label>
                 <input type="text" id="idNumber" placeholder="e.g., ID#101" required>
-                <div class="input-error-msg" id="idError">Invalid ID Number. Please enter a valid asset ID.</div>
+                <!-- NAITAMANG WARNING MESSAGE PARA SA ID NUMBER -->
+                <div class="input-error-msg" id="idError">Maling format. Dapat magsimula sa 'ID#' na sinusundan ng numero (e.g., ID#101).</div>
             </div>
 
             <div class="form-group">
@@ -173,7 +174,7 @@
             <div class="form-group">
                 <label for="contactNumber">Contact Number</label>
                 <input type="text" id="contactNumber" placeholder="e.g., 09123456789" maxlength="11" required>
-                <div class="input-error-msg" id="contactError">Must be exactly 11 digits starting with 09 (e.g., 09123456789).</div>
+                <div class="input-error-msg" id="contactError">Dapat eksaktong 11 digits at nagsisimula sa 09 (e.g., 09123456789).</div>
             </div>
 
             <button type="submit" class="btn-submit" id="submitBtn">Submit Log</button>
@@ -204,24 +205,25 @@
             
             let hasError = false;
 
-            // 1. VALIDATION PARA SA ID NUMBER (Bawal blangko, space lang, o mas mababa sa 3 characters)
+            // 1. STRICK VALIDATION PARA SA ID NUMBER (Dapat magsimula sa ID# o id# at sundan ng kahit ilang numero)
             const idValue = idInput.value.trim();
-            if (idValue.length < 3) {
+            const idPattern = /^(ID#|id#)\d+$/; 
+            if (!idPattern.test(idValue)) {
                 idInput.classList.add('invalid-input');
                 idError.style.display = "block";
                 hasError = true;
             }
 
-            // 2. VALIDATION PARA SA CONTACT NUMBER (Dapat 11 digits, puro numero, at nagsisimula sa 09)
+            // 2. VALIDATION PARA SA CONTACT NUMBER (Dapat eksaktong 11 digits at nagsisimula sa 09)
             const contactValue = contactInput.value.trim();
-            const contactPattern = /^09\d{9}$/; // Regular expression para sa PH mobile format
+            const contactPattern = /^09\d{9}$/; 
             if (!contactPattern.test(contactValue)) {
                 contactInput.classList.add('invalid-input');
                 contactError.style.display = "block";
                 hasError = true;
             }
 
-            // Kung may nakitang mali, hihinto rito at hindi magpapadala sa database
+            // Kung may mali ang rider, hindi itutuloy ang pagpapadala sa sheet
             if (hasError) {
                 return;
             }
