@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RUSI EDP ITEM TRACKER</title>
+    <!-- Google Fonts para sa Poppins font support -->
     <link href="https://googleapis.com" rel="stylesheet">
     <style>
         * {
@@ -146,9 +147,16 @@
                 <input type="text" id="location" placeholder="e.g., San Manuel Isabela" required>
             </div>
 
+            <!-- NAGDAGDAG NG INPUT PARA SA ID NUMBER (Ito ang gagamitin pang-overwrite) -->
             <div class="form-group">
-                <label for="item">Item Name</label>
-                <input type="text" id="item" placeholder="e.g., ID#101" required>
+                <label for="idNumber">ID Number</label>
+                <input type="text" id="idNumber" placeholder="e.g., ID#101" required>
+            </div>
+
+            <!-- NETAMANG FIELD PARA SA ITEM DESCRIPTION -->
+            <div class="form-group">
+                <label for="item">Item Description</label>
+                <input type="text" id="item" placeholder="e.g., COMPUTER SET, SERVER" required>
             </div>
 
             <div class="form-group">
@@ -167,7 +175,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz7m_jzjt-c_04hxQ6npz4ZUd4SywC0jTRWa5O2P3RggUgUKOHU8pauBYUlnduoxPYpFg/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYEhJfvPOkt69Pzjlxcd70CA-DPuChoeL7IDHDQI1Sq-BzwB5gahqN2OyrsiANbO0D2Q/exec";
 
         document.getElementById('logForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -179,9 +187,10 @@
             submitBtn.innerText = "Submitting...";
             messageDiv.style.display = "none";
 
-            // Tiyaking apat na fields lang ang ipapasa natin na may tamang susunod na pangalan
+            // Ipapasa na natin ang limang saktong detalye kasama ang idNumber
             const payload = {
                 location: document.getElementById('location').value,
+                idNumber: document.getElementById('idNumber').value,
                 item: document.getElementById('item').value,
                 receivedBy: document.getElementById('receivedBy').value,
                 contactNumber: document.getElementById('contactNumber').value
