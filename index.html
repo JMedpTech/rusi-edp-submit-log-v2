@@ -94,7 +94,6 @@
             font-size: 12px;
         }
 
-        /* Warning Text Style */
         .input-error-msg {
             color: #ff4444;
             font-size: 11px;
@@ -161,9 +160,9 @@
 
             <div class="form-group">
                 <label for="idNumber">ID Number</label>
-                <input type="text" id="idNumber" placeholder="e.g., ID#101" required>
-                <!-- NAITAMANG WARNING MESSAGE PARA SA ID NUMBER -->
-                <div class="input-error-msg" id="idError">Maling format. Dapat magsimula sa 'ID#' na sinusundan ng numero (e.g., ID#101).</div>
+                <!-- BINAGO ANG PLACEHOLDER: Numero na lang ang hihingin natin sa rider -->
+                <input type="text" id="idNumber" placeholder="e.g., 101" required>
+                <div class="input-error-msg" id="idError">Maling input. Mangyaring maglagay ng valid na numero para sa ID.</div>
             </div>
 
             <div class="form-group">
@@ -196,7 +195,6 @@
             const submitBtn = document.getElementById('submitBtn');
             const messageDiv = document.getElementById('message');
             
-            // I-reset ang mga dating warnings
             idInput.classList.remove('invalid-input');
             contactInput.classList.remove('invalid-input');
             idError.style.display = "none";
@@ -205,16 +203,15 @@
             
             let hasError = false;
 
-            // 1. STRICK VALIDATION PARA SA ID NUMBER (Dapat magsimula sa ID# o id# at sundan ng kahit ilang numero)
-            const idValue = idInput.value.trim();
-            const idPattern = /^(ID#|id#)\d+$/; 
-            if (!idPattern.test(idValue)) {
+            // 1. VALIDATION PARA SA ID NUMBER (Tinitiyak na may nilagay na kahit anong numero o text)
+            let idValue = idInput.value.trim();
+            if (idValue.length === 0) {
                 idInput.classList.add('invalid-input');
                 idError.style.display = "block";
                 hasError = true;
             }
 
-            // 2. VALIDATION PARA SA CONTACT NUMBER (Dapat eksaktong 11 digits at nagsisimula sa 09)
+            // 2. VALIDATION PARA SA CONTACT NUMBER (11 digits starting with 09)
             const contactValue = contactInput.value.trim();
             const contactPattern = /^09\d{9}$/; 
             if (!contactPattern.test(contactValue)) {
@@ -223,9 +220,14 @@
                 hasError = true;
             }
 
-            // Kung may mali ang rider, hindi itutuloy ang pagpapadala sa sheet
             if (hasError) {
                 return;
+            }
+            
+            // AUTOMATIC APPEND LOGIC: 
+            // Kung hindi pa nagsisimula sa "ID#" ang tinype ng rider, kusa itong idudugtong ng system!
+            if (!idValue.toUpperCase().startsWith("ID#")) {
+                idValue = "ID#" + idValue;
             }
             
             submitBtn.disabled = true;
@@ -233,7 +235,7 @@
 
             const payload = {
                 location: document.getElementById('location').value,
-                idNumber: idValue,
+                idNumber: idValue, // Ito na yung may awtomatikong "ID#" sa unahan
                 receivedBy: document.getElementById('receivedBy').value,
                 contactNumber: contactValue
             };
